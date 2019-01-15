@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QThread::msleep(100);
+
     QSharedMemory shmem("SIZ_UGRES_Pich_SV_01012019"); //запрет запуска двух экземпляров программ
     if (shmem.attach())
     {
@@ -28,14 +30,18 @@ int main(int argc, char *argv[])
         SETTING_SET_PROGNAME = "SIZ";
         QString pathToDB = INI->value("dbFile", "").toString();
 
-        if (pathToDB.isEmpty()){
+
+        if (pathToDB.isEmpty() || !QFile::exists(pathToDB)){ //если файл не указан или его не существует, то запросить новое расположение базы
             QString pathToDB = QFileDialog::getOpenFileName(nullptr,
                                                             "Открыть файл базы данных",
                                                             "",
                                                             "Microsoft Access (*.mdb, *.accdb)");
-            if (!pathToDB.isEmpty())
-                INI->setValue("dbFile", pathToDB);
-            INI->sync();
+            if (!pathToDB.isEmpty()){
+                INI->setValue("dbFile", pathToDB); //вписать в конфиг новое расположение
+                INI->sync();
+
+                QProcess::startDetached(argv[0]); //перезапустить программу
+            }
             return 1;
         }
 

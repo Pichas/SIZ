@@ -43,10 +43,11 @@ winStaffList::winStaffList(QWidget *parent) :
     mainTableModel->setHeaderData(10, Qt::Horizontal, "Одежда"); //в базе столбец называется РазмерОдежды
     mainTableModel->setHeaderData(11, Qt::Horizontal, "Обувь"); //в базе столбец называется РазмерОбуви
     mainTableModel->setHeaderData(12, Qt::Horizontal, "Голова"); //в базе столбец называется РазмерГоловногоУбора
-    mainTableModel->setHeaderData(13, Qt::Horizontal, "Респир"); //в базе столбец называется РазмерРеспиратора
-    mainTableModel->setHeaderData(14, Qt::Horizontal, "Рукавицы"); //в базе столбец называется РазмерРукавиц
-    mainTableModel->setHeaderData(15, Qt::Horizontal, "Перчатки"); //в базе столбец называется РазмерПерчаток
-    mainTableModel->setHeaderData(16, Qt::Horizontal, "Каска"); //в базе столбец называется ЦветКаски
+    mainTableModel->setHeaderData(13, Qt::Horizontal, "Противогаз"); //в базе столбец называется РазмерГоловногоУбора
+    mainTableModel->setHeaderData(14, Qt::Horizontal, "Респир"); //в базе столбец называется РазмерРеспиратора
+    mainTableModel->setHeaderData(15, Qt::Horizontal, "Рукавицы"); //в базе столбец называется РазмерРукавиц
+    mainTableModel->setHeaderData(16, Qt::Horizontal, "Перчатки"); //в базе столбец называется РазмерПерчаток
+    mainTableModel->setHeaderData(17, Qt::Horizontal, "Каска"); //в базе столбец называется ЦветКаски
 
     ui->tvTable->resizeColumnsToContents();
     ui->tvTable->resizeRowsToContents();
