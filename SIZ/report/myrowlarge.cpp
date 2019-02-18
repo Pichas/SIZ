@@ -30,13 +30,13 @@ void myRowLarge::poMesacam(int k)
                 }
                 break;
             case 2://списания считаются по другому
-                if (dv.addMonths(period) == QDate(year, month, dv.day())) //если пошел расчет след периода
+                if (dv.addMonths(period) == QDate(year, month, dv.day())){ //если пошел расчет след периода
                     dv = dv.addMonths(period); //то добавить его в расчетные формулы
-
-                    if (dv >= dataYstr){  //если период больше даты устройства то посчитать
-                        cells.last()->setValue(yearPrice.value(dv.year(), 0) * kolvo / /*(float)*/period); //если необходимо повысить точность
-                        sum += cells.last()->getValue<int>();  //считать сумму за год
-                    }
+                }
+                if (dv >= dataYstr){  //если период больше даты устройства то посчитать
+                    cells.last()->setValue(yearPrice.value(dv.year(), 0) * kolvo / /*(float)*/period); //если необходимо повысить точность
+                    sum += cells.last()->getValue<int>();  //считать сумму за год
+                }
                 break;
             default:
                 break;

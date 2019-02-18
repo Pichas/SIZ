@@ -10,13 +10,19 @@
 
 
 #include "myset.h"
-
+#include "update/update.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    a.installTranslator(&qtTranslator);
+
     QThread::msleep(100);
+
 
     QSharedMemory shmem("SIZ_UGRES_Pich_SV_01012019"); //запрет запуска двух экземпляров программ
     if (shmem.attach())
@@ -28,8 +34,20 @@ int main(int argc, char *argv[])
     {
 
         SETTING_SET_PROGNAME = "SIZ";
-        QString pathToDB = INI->value("dbFile", "").toString();
 
+        QSplashScreen* splash = new QSplashScreen(QPixmap("://src/logo.jpg"));
+        splash->show();
+
+
+        update* upd = new update(splash);
+        while (upd->waiteForFinish()) {
+            qApp->processEvents();
+        }
+
+
+#ifndef ALL //если все филиалы, то пропустить открытие первой базы
+
+        QString pathToDB = INI->value("dbFile", "").toString();
 
         if (pathToDB.isEmpty() || !QFile::exists(pathToDB)){ //если файл не указан или его не существует, то запросить новое расположение базы
             QString pathToDB = QFileDialog::getOpenFileName(nullptr,
@@ -49,10 +67,6 @@ int main(int argc, char *argv[])
         QSqlDatabase db = QSqlDatabase::addDatabase("QODBC","mainBase");
         db.setDatabaseName("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + pathToDB);
 
-
-        QSplashScreen* splash = new QSplashScreen(QPixmap("://src/logo.jpg"));
-        splash->show();
-
         splash->showMessage("Подключение к БД ...", Qt::AlignCenter | Qt::AlignBottom, Qt::black);
         QThread::msleep(500);
         if(db.open()){
@@ -67,8 +81,7 @@ int main(int argc, char *argv[])
             return 2;
         }
 
-
-
+#endif
 
         MainWindow w;
 

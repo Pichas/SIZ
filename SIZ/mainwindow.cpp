@@ -8,6 +8,7 @@
 #include "winstock.h"
 #include "winreport.h"
 #include "winemplcard.h"
+#include "windblist.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -38,6 +39,54 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbReport, &QPushButton::clicked, [&](bool /*b*/){
         QScopedPointer <winReport> win(new winReport(nullptr));
         win->exec();});
+
+
+#ifdef ALL
+
+    //загрузить список станций
+    for (int i = 0; i < INI->allKeys().count(); i++) {
+        if (INI->allKeys().at(i)[0] == '_')
+            ui->cbSelectDB->addItem(INI->allKeys().at(i).mid(1)); //удалить нижний прочерк в начале
+    }
+
+
+    connect(ui->pbEditDBList, &QPushButton::clicked, [&](bool /*b*/){
+        QScopedPointer <winDBList> win(new winDBList(nullptr));
+        win->exec();});
+
+    connect(ui->cbSelectDB, &QComboBox::currentTextChanged, [&](QString newVal){
+        QSqlDatabase db = QSqlDatabase::database("mainBase");
+        if (db.isValid()) db.close();
+
+
+        db = QSqlDatabase::addDatabase("QODBC","mainBase");
+        db.setDatabaseName("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + INI->value("_" + newVal, "").toString());
+
+        bool isEnabled;
+        if (!db.open()){
+            QMessageBox::critical(nullptr, "Ошибка","Невозможно открыть базу данных\r\n" + db.lastError().text());
+            isEnabled = false;
+        }else{
+            isEnabled = true;
+        }
+
+        ui->pbStaffList->setEnabled(isEnabled);
+        ui->pbNames->setEnabled(isEnabled);
+        ui->pbNorm->setEnabled(isEnabled);
+        ui->pbStock->setEnabled(isEnabled);
+        ui->pbEmplCard->setEnabled(isEnabled);
+        ui->pbReport->setEnabled(isEnabled);
+    });
+
+
+    ui->cbSelectDB->currentTextChanged(ui->cbSelectDB->currentText());
+
+#else
+
+    ui->pbEditDBList->hide();
+    ui->cbSelectDB->hide();
+
+#endif
 
 }
 
