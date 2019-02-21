@@ -10,7 +10,7 @@
 
 
 #include "myset.h"
-#include "update/update.h"
+#include "version.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +21,13 @@ int main(int argc, char *argv[])
                 QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     a.installTranslator(&qtTranslator);
 
+
+    QFile f("version");
+    if(f.open(QIODevice::WriteOnly)){   //write cur version
+        f.write(VER_FILEVERSION_STR);
+        f.flush();
+        f.close();
+    }
     QThread::msleep(100);
 
 
@@ -32,18 +39,10 @@ int main(int argc, char *argv[])
     }
     else
     {
-
         SETTING_SET_PROGNAME = "SIZ";
 
         QSplashScreen* splash = new QSplashScreen(QPixmap("://src/logo.jpg"));
         splash->show();
-
-
-        update* upd = new update(splash);
-        while (upd->waiteForFinish()) {
-            qApp->processEvents();
-        }
-
 
 #ifndef ALL //если все филиалы, то пропустить открытие первой базы
 
@@ -84,7 +83,6 @@ int main(int argc, char *argv[])
 #endif
 
         MainWindow w;
-
 
         splash->finish(&w);
         w.show();

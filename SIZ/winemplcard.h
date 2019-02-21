@@ -6,6 +6,7 @@
 #include <QtSql>
 #include <QTableView>
 #include <QHeaderView>
+#include <QMessageBox>
 
 #include "myset.h"
 

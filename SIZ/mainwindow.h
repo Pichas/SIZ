@@ -5,6 +5,23 @@
 #include <QtSql>
 #include <QTableView>
 #include <QScopedPointer>
+#include <QMessageBox>
+
+
+
+
+
+
+
+#include "update/appupdate.h"
+#include "report/mytable.h"
+#include "winstafflist.h"
+#include "winnames.h"
+#include "winnorma.h"
+#include "winstock.h"
+#include "winreport.h"
+#include "winemplcard.h"
+#include "windblist.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +37,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+
+private slots:
+    void checkUpdate();
 
 
 };

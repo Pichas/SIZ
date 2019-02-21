@@ -1,14 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "report/mytable.h"
-#include "winstafflist.h"
-#include "winnames.h"
-#include "winnorma.h"
-#include "winstock.h"
-#include "winreport.h"
-#include "winemplcard.h"
-#include "windblist.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pbReport, &QPushButton::clicked, [&](bool /*b*/){
         QScopedPointer <winReport> win(new winReport(nullptr));
         win->exec();});
+
+    QTimer::singleShot(10 * 1000, this, &MainWindow::checkUpdate);//проверить обновление через 10 сек
+
 
 
 #ifdef ALL
@@ -93,4 +89,23 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::checkUpdate()
+{
+    appUpdate* upd = new appUpdate();
+    connect(upd, &appUpdate::needUpdate, [&]{
+        QMessageBox::StandardButton reply = QMessageBox::information(nullptr, "Обновление",
+                                        "Доступно обновление.\nОбновить?",
+                                        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+
+        switch (reply) {
+        case QMessageBox::Yes:
+            QProcess::startDetached("update.exe", QStringList(), QCoreApplication::applicationDirPath());
+            exit(2);
+            break;
+        default:
+            break;
+        }
+    });
 }

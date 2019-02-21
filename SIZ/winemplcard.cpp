@@ -36,6 +36,13 @@ winEmplCard::~winEmplCard()
 
 void winEmplCard::accept()
 {
+    if (ui->cbEmplList->findText(ui->cbEmplList->currentText()) == -1) {
+        QMessageBox::warning(nullptr, "Ошибка", "Такого работника не существует");
+        return;
+    }
+
+
+
     QAxObject* excel = new QAxObject("Excel.Application");
     QAxObject* app = excel->querySubObject("Application()");
     QAxObject* wbks = excel->querySubObject("Workbooks()");

@@ -59,7 +59,7 @@ SOURCES += \
     winreport.cpp \
     winemplcard.cpp \
     windblist.cpp \
-    update/update.cpp
+    update/appupdate.cpp
 
 HEADERS += \
     report/inmemdb.h \
@@ -85,7 +85,7 @@ HEADERS += \
     winreport.h \
     winemplcard.h \
     windblist.h \
-    update/update.h
+    update/appupdate.h
 
 FORMS += \
         mainwindow.ui \
