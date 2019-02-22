@@ -94,6 +94,7 @@ MainWindow::~MainWindow()
 void MainWindow::checkUpdate()
 {
     appUpdate* upd = new appUpdate();
+    connect(upd, &appUpdate::sendMessage, ui->statusBar, &QStatusBar::showMessage);
     connect(upd, &appUpdate::needUpdate, [&]{
         QMessageBox::StandardButton reply = QMessageBox::information(nullptr, "Обновление",
                                         "Доступно обновление.\nОбновить?",

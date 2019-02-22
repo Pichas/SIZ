@@ -73,6 +73,8 @@ signals:
     void sNextState();
     void sFinish();
     void needUpdate();
+
+    void sendMessage(QString, int time = 5000);
 };
 
 

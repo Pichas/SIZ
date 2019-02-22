@@ -58,10 +58,12 @@ void appUpdate::mInit()
 
     if(s.waitForConnected(500)) {
         qDebug() << "connetction ok";
+        emit sendMessage("Соединение с сервером установлено");
         s.disconnectFromHost();
         emit sNextState();
     } else {
         qDebug() << "connetction error";
+        emit sendMessage("Ошибка соединения с сервером обновлений");
         QTimer::singleShot(10 * 1000, this, &appUpdate::sRetry); //через 10 сек повторить
     }
 }
@@ -74,6 +76,7 @@ void appUpdate::mCheckVersion()
     QUrl version(mUrl);
     version.setPath("/Pichas/SIZ/master/bin/version");
 
+    emit sendMessage("Проверка наличия обновлений");
     doDownload(version);
 }
 
@@ -85,6 +88,7 @@ void appUpdate::mUpdate()
     QUrl update(mUrl);
     update.setPath("/Pichas/SIZ/master/bin/update");
 
+    emit sendMessage("Скачивание обновлений");
     doDownload(update);
 }
 
