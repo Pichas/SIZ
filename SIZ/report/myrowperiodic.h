@@ -10,12 +10,14 @@ public:
     explicit myRowPeriodic(const QList<QVariant> rec, QObject *parent = nullptr);
 
 protected:
-    QDate dv; //дата выдачи
-    QDate dataYstr; //дата устройства на работу
 
     int kolvo; //количество едениц
     int period; //периодичность. тут она 12 месяцев
     int skladKolvo; //количество на складе
+
+    QDate dv; //дата выдачи
+    QDate dataYstr; //дата устройства на работу
+
 
 
     void gotoYearStart(){

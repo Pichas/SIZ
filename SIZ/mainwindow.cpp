@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QProgressBar>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -33,8 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QScopedPointer <winReport> win(new winReport(nullptr));
         win->exec();});
 
-    QTimer::singleShot(10 * 1000, this, &MainWindow::checkUpdate);//проверить обновление через 10 сек
-
+    QTimer::singleShot(60 * 1000, this, &MainWindow::checkUpdate);//проверить обновление через 10 сек
 
 
 #ifdef ALL

@@ -52,6 +52,7 @@ appUpdate::~appUpdate()
 
 void appUpdate::mInit()
 {
+    static int rets = 3;
     //проверка доступности сервиса
     QTcpSocket s;
     s.connectToHost(mUrl.host(), static_cast<uint16_t>(mUrl.port()), QIODevice::ReadOnly);
@@ -62,9 +63,13 @@ void appUpdate::mInit()
         s.disconnectFromHost();
         emit sNextState();
     } else {
+        rets--;
         qDebug() << "connetction error";
         emit sendMessage("Ошибка соединения с сервером обновлений");
         QTimer::singleShot(10 * 1000, this, &appUpdate::sRetry); //через 10 сек повторить
+    }
+    if(!rets){
+        emit sFinish();
     }
 }
 

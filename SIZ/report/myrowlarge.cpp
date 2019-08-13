@@ -34,7 +34,11 @@ void myRowLarge::poMesacam(int k)
                     dv = dv.addMonths(period); //то добавить его в расчетные формулы
                 }
                 if (dv >= dataYstr){  //если период больше даты устройства то посчитать
-                    cells.last()->setValue(yearPrice.value(dv.year(), 0) * kolvo / /*(float)*/period); //если необходимо повысить точность
+                    if (dv > QDate(year, month, dv.day())){ //если дата перевалила за след период, а считаться должен предыдущий
+                        cells.last()->setValue(yearPrice.value(dv.addMonths(-period).year(), 0) * kolvo / period); //получить год предыдущей выдачи
+                    } else {
+                        cells.last()->setValue(yearPrice.value(dv.year(), 0) * kolvo / period);
+                    }
                     sum += cells.last()->getValue<int>();  //считать сумму за год
                 }
                 break;

@@ -61,6 +61,7 @@ void winReport::makeReport()
     QAxObject* wbks = excel->querySubObject("Workbooks()");
     QAxObject* wb = wbks->querySubObject("Open(const QString&)", QCoreApplication::applicationDirPath() + "/tmpl/result.xltm" );
 
+
     QAxObject* ws1 = wb->querySubObject("Worksheets(int)", 1);
     makeTableHead(ws1); //достроить шапку
     excel->dynamicCall("Run(QVariant)", "resTbl"); //расширить таблицу по всей ширине записей
@@ -85,6 +86,9 @@ void winReport::makeReport()
 
     //вторая часть отчета
     RESULT->resetResult();
+
+    //показать excel
+    app->setProperty("Visible", true);
 
     //данный запрос выгружает всех, кому необходимо выдать с датами выдачи (если были выданы)
     QSqlQuery onceGivenQuery(" SELECT TABLE1.Наимен, TABLE1.Норма, TABLE1.Ед, TABLE1.Признак, TABLE1.Тип, TABLE1.ТабНомер, TABLE1.Цех, TABLE1.Должность, TABLE1.ФИО, TABLE1.Размер,  IIf(IsNull(TABLE2.ДатаВыдачи), 'Не выдано', TABLE2.ДатаВыдачи) AS дата_выдачи "
@@ -140,8 +144,7 @@ void winReport::makeReport()
     //добавить итоговые строки в таблицы
     excel->dynamicCall("Run(QVariant)", "totals");
 
-    //показать excel
-    app->setProperty("Visible", true );
+
 
     excel->deleteLater();
 
