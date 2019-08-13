@@ -33,7 +33,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #DEFINES += ALL
 
-
 SOURCES += \
     report/inmemdb.cpp \
     report/mybuffer.cpp \

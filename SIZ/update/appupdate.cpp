@@ -91,7 +91,15 @@ void appUpdate::mUpdate()
     curFileToCheck = QCoreApplication::applicationDirPath() + "/update.exe";
     //NOTE updater
     QUrl update(mUrl);
-    update.setPath("/Pichas/SIZ/master/bin/update");
+
+#ifdef __i386
+    update.setPath("/Pichas/SIZ/master/bin/update_x86");
+#elif __x86_64__
+    update.setPath("/Pichas/SIZ/master/bin/update_x64");
+#elif //не поддерживается архитектура
+    emit sFinish();
+    return;
+#endif
 
     emit sendMessage("Скачивание обновлений");
     doDownload(update);
@@ -127,8 +135,10 @@ void appUpdate::downloadFinished(QNetworkReply *reply)
             QStringList remoteParts = QString (reply->readAll()).split('.');
 
             for (int i = 0; i < qMin(remoteParts.size(), localParts.size()); ++i) {
-                if (remoteParts[i].toInt() > localParts[i].toInt())
+                if (remoteParts[i].toInt() > localParts[i].toInt()){
                     emit sNextState();
+                    return;
+                }
             }
             emit sFinish();
 
