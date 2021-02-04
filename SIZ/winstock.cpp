@@ -20,6 +20,8 @@ winStock::winStock(QWidget *parent) :
     //если расширить окно, то станут доступны остальные поля с информацией по наименованиям
     QTableView* namesView = new QTableView(this);
     namesView->setModel(namesModel.data());
+    namesView->sortByColumn(1, Qt::AscendingOrder);
+    namesView->hideColumn(0);
     namesView->horizontalHeader()->setVisible(false);
     namesView->verticalHeader()->setVisible(false);
     namesView->resizeColumnsToContents();
@@ -46,8 +48,14 @@ winStock::winStock(QWidget *parent) :
     stockModel.reset(new QSqlQueryModel(this));
     stockModel->setQuery(" SELECT наличие_на_складе.ИДНаимен as Код, наименования.Наимен as Наименование, наличие_на_складе.Размер, наличие_на_складе.Количество "
                          " FROM наименования INNER JOIN наличие_на_складе ON наименования.ИД = наличие_на_складе.ИДНаимен "
-                         " ORDER BY наличие_на_складе.ИДНаимен;", QSqlDatabase::database("mainBase"));
-    ui->tvTable->setModel(stockModel.data());
+                         " ORDER BY наименования.Наимен, наличие_на_складе.Размер;", QSqlDatabase::database("mainBase"));
+    stockModelFiltered.reset(new QSortFilterProxyModel(this));
+    stockModelFiltered->setSourceModel(stockModel.data());
+    stockModelFiltered->setFilterKeyColumn(1);
+    stockModelFiltered->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    connect(ui->leFilterName, &QLineEdit::textChanged, stockModelFiltered.data(), &QSortFilterProxyModel::setFilterWildcard);
+
+    ui->tvTable->setModel(stockModelFiltered.data());
     ui->tvTable->resizeColumnsToContents();
     ui->tvTable->setColumnWidth(1,530); //установить размеры столбцов, для корректного отображения
     ui->tvTable->setColumnWidth(3,30);

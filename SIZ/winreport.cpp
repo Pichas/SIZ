@@ -151,6 +151,7 @@ void winReport::makeReport()
     qDebug() << "Завершено";
     ui->pbrStatus->hide();
     ui->pbMake->setEnabled(true);
+    this->close();
 }
 
 void winReport::makeTableHead(QAxObject* ws)

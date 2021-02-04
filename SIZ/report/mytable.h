@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QSharedPointer>
 #include <QScopedPointer>
+#include <QPlainTextEdit>
 
 #include "myrowsmall.h"
 #include "myrowlarge.h"

@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QAxObject>
 #include <QFileDialog>
+#include <QSortFilterProxyModel>
 
 #include "winnames.h"
 
@@ -28,6 +29,7 @@ private:
 
     QScopedPointer<QSqlTableModel> namesModel;
     QScopedPointer<QSqlQueryModel> stockModel;
+    QScopedPointer<QSortFilterProxyModel> stockModelFiltered;
 
     QScopedPointer<QSortFilterProxyModel> selectNameSortedModel;
     QScopedPointer<QSqlTableModel> sizeModel;

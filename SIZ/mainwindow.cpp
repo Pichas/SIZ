@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QScopedPointer <winReport> win(new winReport(nullptr));
         win->exec();});
 
-    QTimer::singleShot(60 * 1000, this, &MainWindow::checkUpdate);//проверить обновление
+    //QTimer::singleShot(60 * 1000, this, &MainWindow::checkUpdate);//проверить обновление
 
 
 #ifdef ALL

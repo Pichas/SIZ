@@ -10,6 +10,10 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
         qDebug() << "Обработка записи №" << rows.count();});
 
     pTimer->start(1000);
+    
+    QString errors;
+
+    
 
     RESULT->beginTransaction();
     while (q->next()){
@@ -26,7 +30,12 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
             qDebug() << record.at(6).toString();
             qDebug() << record.at(7).toString();
             qDebug() << record.at(5).toString() << " " << record.at(8).toString();
-
+            
+            errors += "Ошибка: Не указан период выдачи " 
+                                    + record.at(0).toString() + " " 
+                                    + record.at(6).toString() + " " 
+                                    + record.at(7).toString() + " " 
+                                    + record.at(5).toString() + "\n\n" ;
             continue;
         }
 
@@ -39,9 +48,9 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
 
         if (norma.contains(QRegExp("(Дежурный|До износа)")))
             rows.append(new myRowOnce(record, this)); //что считается один раз
-        else if (norma.split(" ").at(1).toInt() > 12)
+        else /*if (norma.split(" ").at(1).toInt() > 12)
             rows.append(new myRowLarge(record, this)); //расчет большого периода
-        else if (norma.split(" ").at(1).toInt() <= 12)
+        else if (norma.split(" ").at(1).toInt() <= 12)*/
             rows.append(new myRowSmall(record, this)); //расчет маленького периода
 
         if (calc)
@@ -56,7 +65,19 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
         qApp->processEvents(); //обрабтка всех событий
     }
 
+    
+    
     RESULT->endTransaction();
+    
+    if (!errors.isEmpty()) {
+       QPlainTextEdit* pt = new QPlainTextEdit(nullptr);
+       pt->setPlainText(errors);
+       pt->show();
+       pt->setWindowTitle("Ошибки");
+       pt->setGeometry(100,100,500,300);
+       
+       qApp->processEvents(); //обрабтка всех событий
+    }
 }
 
 

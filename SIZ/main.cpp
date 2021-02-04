@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        shmem.create(1);
         SETTING_SET_PROGNAME = "SIZ";
 
         QSplashScreen* splash = new QSplashScreen(QPixmap("://src/logo.jpg"));
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
                 INI->setValue("dbFile", pathToDB); //вписать в конфиг новое расположение
                 INI->sync();
 
-                QProcess::startDetached(argv[0]); //перезапустить программу
+                QProcess::startDetached(argv[0], QStringList()); //перезапустить программу
             }
             return 1;
         }

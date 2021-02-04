@@ -250,7 +250,7 @@
               <item>
                <widget class="QSpinBox" name="sbCount">
                 <property name="maximum">
-                 <number>999</number>
+                 <number>9999</number>
                 </property>
                 <property name="value">
                  <number>1</number>
