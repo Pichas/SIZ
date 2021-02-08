@@ -48,9 +48,9 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
 
         if (norma.contains(QRegExp("(Дежурный|До износа)")))
             rows.append(new myRowOnce(record, this)); //что считается один раз
-        else /*if (norma.split(" ").at(1).toInt() > 12)
+        else if (norma.split(" ").at(1).toInt() > 12)
             rows.append(new myRowLarge(record, this)); //расчет большого периода
-        else if (norma.split(" ").at(1).toInt() <= 12)*/
+        else if (norma.split(" ").at(1).toInt() <= 12)
             rows.append(new myRowSmall(record, this)); //расчет маленького периода
 
         if (calc)
