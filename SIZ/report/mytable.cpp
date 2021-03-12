@@ -1,5 +1,6 @@
 #include "mytable.h"
 
+
 myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
 {
     QSharedPointer<QTimer> pTimer (new QTimer(), [](QTimer* obj){ //деструетор
@@ -12,7 +13,6 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
     pTimer->start(1000);
     
     QString errors;
-
     
 
     RESULT->beginTransaction();
@@ -40,18 +40,22 @@ myTable::myTable(QSqlQuery *q, bool calc, QObject *parent) : QObject(parent)
         }
 
         if(record.at(3).toString().isEmpty())
-            qDebug() << "ОШИБКА! НЕ УКАЗАНЫ ЕД. ИЗМЕРЕНИЯ " << record.at(0).toString() << "\r\n";
+            errors += "ОШИБКА! НЕ УКАЗАНЫ ЕД. ИЗМЕРЕНИЯ " + record.at(0).toString() + "\r\n";
         if(record.at(4).toString().isEmpty())
-            qDebug() << "ОШИБКА! НЕ УКАЗАН ПРИЗНАК        " << record.at(0).toString() << "\r\n";
+            errors += "ОШИБКА! НЕ УКАЗАН ПРИЗНАК        " + record.at(0).toString() + "\r\n";
         if(record.at(5).toString().isEmpty())
-            qDebug() << "ОШИБКА! НЕ УКАЗАН ТИП            " << record.at(0).toString() << "\r\n";
+            errors += "ОШИБКА! НЕ УКАЗАН ТИП            " + record.at(0).toString() + "\r\n";
 
         if (norma.contains(QRegExp("(Дежурный|До износа)")))
             rows.append(new myRowOnce(record, this)); //что считается один раз
-        else if (norma.split(" ").at(1).toInt() > 12)
-            rows.append(new myRowLarge(record, this)); //расчет большого периода
-        else if (norma.split(" ").at(1).toInt() <= 12)
+        /*else if (record.at(12).toDate() < QDate(2021, 1, 1))
+            rows.append(new myRowLarge(record, this)); //расчет большого периода*/
+        else 
             rows.append(new myRowSmall(record, this)); //расчет маленького периода
+        
+        if(rows.last()->getCell(9)->getValue().toString().isEmpty())
+            errors += "ОШИБКА! НЕ УКАЗАН РАЗМЕР            " + record.at(0).toString() + " " + record.at(8).toString() + "\r\n";
+        
 
         if (calc)
             rows.last()->calculateRow();

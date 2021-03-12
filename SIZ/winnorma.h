@@ -5,6 +5,7 @@
 #include <QScopedPointer>
 #include <QSqlRelationalTableModel>
 #include <QSqlQuery>
+#include <QSqlError>
 
 #include "wintables.h"
 
@@ -27,11 +28,14 @@ private:
     QScopedPointer<QSqlQueryModel> allModel;
     QScopedPointer<QSqlRelationalTableModel> selectedModel;
 
-    QScopedPointer<QSqlTableModel> allUnits;
-    QScopedPointer<QSqlTableModel> allSeats;
+    QScopedPointer<QSqlQueryModel> allUnits;
+    QScopedPointer<QSqlQueryModel> allSeats;
     QScopedPointer<QSqlTableModel> selectedPoints;
     QScopedPointer<QSqlRelationalTableModel> selectedPointsShowNames;
 
+    
+    QScopedPointer<QSqlQueryModel> pe;
+    QScopedPointer<QSqlQueryModel> ng;
 
 
 

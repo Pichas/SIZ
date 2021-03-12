@@ -7,7 +7,7 @@ myRowOnce::myRowOnce(const QList<QVariant> rec, QObject *parent) : myRow(rec, pa
 
 void myRowOnce::poGodam(int k)
 {
-    QDate dv = cells.at(10)->getValue<QDate>(); //дата выдачи
+    QDate dv = cells.at(12)->getValue<QDate>(); //дата выдачи
 
     for (int year = yearStart; year <= yearStop; year++){
         cells.append(new myCell("", this)); //сразу добавляем ячейку для работы
@@ -32,7 +32,7 @@ void myRowOnce::poGodam(int k)
 
 void myRowOnce::poMesacam(int k)
 {
-    QDate dv = cells.at(10)->getValue<QDate>(); //дата выдачи
+    QDate dv = cells.at(12)->getValue<QDate>(); //дата выдачи
 
     for (int year = yearStart; year <= yearStop; year++){ //обработать заданный диапазон лет
         int sum = 0;

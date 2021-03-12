@@ -4,7 +4,7 @@
 
 myRowPeriodic::myRowPeriodic(const QList<QVariant> rec, QObject *parent) : myRow(rec, parent)
 {
-    dv = cells.at(10)->getValue<QDate>(); //дата выдачи
+    dv = cells.at(12)->getValue<QDate>(); //дата выдачи
     dataYstr = worker.at(2).toDate(); //дата устройства на работу
 
     kolvo = cells.at(1)->getValue<QString>().split(" ").at(0).toInt(); //количество едениц

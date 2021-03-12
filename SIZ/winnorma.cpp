@@ -62,23 +62,33 @@ winNorma::winNorma(QWidget *parent) :
         QScopedPointer<winTables> win(new winTables(tables, nullptr));
         win->exec();});
 
-    ui->cbPoints->currentTextChanged(ui->cbPoints->currentText()); //загрузить первую запись
+    emit ui->cbPoints->currentTextChanged(ui->cbPoints->currentText()); //загрузить первую запись
 
 
 
 
     //**********************************************вторая вкладка
     //модель с цехами
-    allUnits.reset(new QSqlTableModel(this, QSqlDatabase::database("mainBase")));
-    allUnits->setTable("цех");
-    allUnits->select();
+    allUnits.reset(new QSqlQueryModel(this));
+    allUnits->setQuery("SELECT Сокр FROM цех ORDER BY Сокр;", QSqlDatabase::database("mainBase"));
     ui->cbUnit->setModel(allUnits.data());
 
     //модель с должностями
-    allSeats.reset(new QSqlTableModel(this, QSqlDatabase::database("mainBase")));
-    allSeats->setTable("должности");
-    allSeats->select();
+    allSeats.reset(new QSqlQueryModel(this));
+    allSeats->setQuery("SELECT Должность FROM должности ORDER BY Должность;", QSqlDatabase::database("mainBase"));
     ui->cbSeat->setModel(allSeats.data());
+    
+    //модель с пе
+    pe.reset(new QSqlQueryModel(this));
+    pe->setQuery("SELECT ПЕ FROM _ПЕ ORDER BY ПЕ;", QSqlDatabase::database("mainBase"));
+    ui->cbPE->setModel(pe.data());
+    
+    
+    //модель с нг
+    ng.reset(new QSqlQueryModel(this));
+    ng->setQuery("SELECT НГ FROM _НГ ORDER BY НГ;", QSqlDatabase::database("mainBase"));
+    ui->cbNG->setModel(ng.data());
+    
 
     //используется табличный вид для того, чтобы отобразить всю должносьт, иначе она будет урезана
     QTableView* allSeatsView = new QTableView(this);
@@ -123,6 +133,16 @@ winNorma::winNorma(QWidget *parent) :
     auto loadPoints = [&](QString /*newValue*/){
         selectedPoints->setFilter("Цех = '" + ui->cbUnit->currentText() + "' AND Должность = '" + ui->cbSeat->currentText() + "'");
         selectedPoints->select();
+        
+        QSqlQuery q("SELECT ПЕ, НГ FROM категории WHERE Цех='" + ui->cbUnit->currentText() + "' AND Должность='" + ui->cbSeat->currentText() + "';", QSqlDatabase::database("mainBase"));
+        if(q.first()){
+            ui->cbPE->setCurrentText(q.value(0).toString());
+            ui->cbNG->setCurrentText(q.value(1).toString());
+        }else{
+            ui->cbPE->setCurrentText("-");
+            ui->cbNG->setCurrentText("0");
+        }
+        
         this->loadAllPerSelectedPoints();};//обновить список наименований по выбранным пунктам
 
     connect(ui->cbUnit, &QComboBox::currentTextChanged, loadPoints);
@@ -133,9 +153,22 @@ winNorma::winNorma(QWidget *parent) :
 
     connect(ui->pbRemPoint, &QPushButton::clicked, this, &winNorma::remPoint);
     connect(ui->tvSelectedPoints, &QTableView::doubleClicked, this, &winNorma::remPoint);
+    
+    connect(ui->pbSavePE, &QPushButton::clicked, [&]{
+        QSqlQuery q("", QSqlDatabase::database("mainBase"));
+        q.exec("UPDATE категории SET ПЕ = '" + ui->cbPE->currentText() + "' WHERE Цех='" + ui->cbUnit->currentText() + "' AND Должность='" + ui->cbSeat->currentText() + "';");
+        if(!q.numRowsAffected())
+            q.exec("INSERT INTO категории (ПЕ, НГ, Цех, Должность) VALUES ('" + ui->cbPE->currentText() + "', '" + ui->cbNG->currentText() + "', '" + ui->cbUnit->currentText() + "', '" + ui->cbSeat->currentText() + "');");
+    });
+    
+    connect(ui->pbSaveNG, &QPushButton::clicked, [&]{
+        QSqlQuery q("", QSqlDatabase::database("mainBase"));
+        q.exec("UPDATE категории SET  НГ = '" + ui->cbNG->currentText() + "' WHERE Цех='" + ui->cbUnit->currentText() + "' AND Должность='" + ui->cbSeat->currentText() + "';");
+        if(!q.numRowsAffected())
+            q.exec("INSERT INTO категории (ПЕ, НГ, Цех, Должность) VALUES ('" + ui->cbPE->currentText() + "', '" + ui->cbNG->currentText() + "', '" + ui->cbUnit->currentText() + "', '" + ui->cbSeat->currentText() + "');");
+    });
 
-    ui->cbUnit->currentTextChanged(ui->cbUnit->currentText()); //обновить содержимое выбранных пунктов
-
+    emit ui->cbUnit->currentTextChanged(ui->cbUnit->currentText()); //обновить содержимое выбранных пунктов
 }
 
 winNorma::~winNorma()

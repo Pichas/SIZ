@@ -24,6 +24,7 @@ public:
     QList<QVariant> getWorkerInfo(QString tNum) const;
     int getStockCount(QString naim, QString size) const;
     QMap<QString, int> getIndexWorker() const {return indexWorker; }
+    QPair<QString, QString> getKat(QString cex, QString dolj);
 
 private:
     myBuffer(QObject *parent = nullptr);

@@ -42,6 +42,14 @@ void myBuffer::clearBuffer()
            "naimen TEXT, "
            "razmer TEXT, "
            "kolvo INTEGER)");
+    
+    q.exec("CREATE TABLE kats ( " //данные по типам
+           "id TEXT PRIMARY KEY, "
+           "cex TEXT, "
+           "dolj TEXT, "
+           "PE TEXT, "
+           "NG INTEGER)");
+    
 }
 
 void myBuffer::insertInMemDB(QString tblName, QSqlQuery* queryExt, QSqlQuery* queryMem)
@@ -109,6 +117,11 @@ void myBuffer::updateTables()
               " FROM наименования INNER JOIN наличие_на_складе ON наименования.ИД = наличие_на_складе.ИДНаимен;");
 
     insertInMemDB("stock", &qExt, &qMem);
+    
+    //загрузка категорий
+    qExt.exec("SELECT * FROM категории;");
+
+    insertInMemDB("kats", &qExt, &qMem);
 }
 
 QMap<int, int> myBuffer::getPrice(QString naim) const
@@ -140,4 +153,13 @@ int myBuffer::getStockCount(QString naim, QString size) const
 {
     QSqlQuery q("SELECT kolvo FROM stock WHERE naimen = '" + naim + "' AND razmer = '" + size + "'", memdb);
     return q.first() ? q.value(0).toInt() : 0;
+}
+
+QPair<QString, QString> myBuffer::getKat(QString cex, QString dolj)
+{
+        QSqlQuery q("SELECT PE, NG FROM kats WHERE cex = '" + cex + "' AND dolj = '"+ dolj + "';", memdb);
+        
+        if (q.first()) return QPair<QString, QString>(q.value(0).toString(),q.value(1).toString());
+            
+        return QPair<QString, QString>("-","0");
 }

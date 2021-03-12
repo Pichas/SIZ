@@ -6,6 +6,7 @@
 #include <QScopedPointer>
 #include <QSharedPointer>
 #include <QMessageBox>
+#include <QLineEdit>
 
 #include "report/result.h"
 #include "report/mytable.h"
@@ -29,5 +30,7 @@ private:
     void makeTableHead(QAxObject *ws);
 
 };
+
+
 
 #endif // WINREPORT_H
