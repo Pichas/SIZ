@@ -284,6 +284,9 @@
               </item>
               <item>
                <widget class="QComboBox" name="cbPeriod">
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
                 <item>
                  <property name="text">
                   <string>9</string>

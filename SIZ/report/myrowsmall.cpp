@@ -2,7 +2,7 @@
 
 myRowSmall::myRowSmall(const QList<QVariant> rec, QObject *parent) : myRowPeriodic(rec, parent)
 {
-    if (period > 12) return;
+    if (period != 12) return;
     //сокращаем период для выполнения более точного расчета
     switch (kolvo) {
     case 2:
