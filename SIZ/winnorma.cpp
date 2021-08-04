@@ -210,7 +210,7 @@ void winNorma::loadPeriod(QModelIndex x)
     else {
         ui->rbPeriodic->setChecked(true);
         ui->sbCount->setValue(period.split(" ").at(0).toInt());
-        ui->cbPeriod->setCurrentText(period.split(" ").at(1));
+        ui->cbPeriod->setValue(period.split(" ").at(1).toInt());
     }
 }
 
@@ -225,7 +225,7 @@ void winNorma::savePeriod()
     else if (ui->rbWear->isChecked())
         selectedModel->setData(selectedModel->index(row,3), "До износа");
     else
-        selectedModel->setData(selectedModel->index(row,3), ui->sbCount->text() + " " + ui->cbPeriod->currentText());
+        selectedModel->setData(selectedModel->index(row,3), ui->sbCount->text() + " " + ui->cbPeriod->text());
 
     selectedModel->submitAll();
     selectedModel->select();
